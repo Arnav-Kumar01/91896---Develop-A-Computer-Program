@@ -82,9 +82,6 @@ def buttons():
     Button(main_window, font=("Times New Roman", 14, "bold"), text = "Submit", command = submit, width = 10).grid(column = 4, row = 1)
     Button(main_window, font=("Times New Roman", 14, "bold"), text = "Delete Row", width = 10).grid(column = 4, row = 3)
 
-    photo = PhotoImage(file = "Images\circle1.png")
-    img_button = Button(main_window, text = 'Click Me !', image = photo).grid(column = 6, row = 6)
-    img_button.pack
 #Creates a fucntion for the entries
 def entries():
     #Creates these four global variables
