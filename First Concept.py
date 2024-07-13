@@ -4,6 +4,14 @@
 
 #Imports tkinter
 from tkinter import*
+import random
+
+#Creates a function for the reciept number
+def generate_reciept():
+    #Creates a global variable for reciept_number
+    global reciept_number
+    #Random number generator
+    reciept_number = random.randint(1000, 9999)
 
 #Creates a quit function which can be used for the quit button
 def quit():
@@ -17,6 +25,9 @@ def submit():
     item_name = entry_item_name.get()
     number_of_items = entry_number_of_items.get()
 
+    #Runs the random number generator
+    generate_reciept()
+    
     #Changes the colour of the text is the user has put an invalid input
     if customer_name == "":
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Customer Full Name:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 0, sticky = E)
@@ -34,16 +45,17 @@ def submit():
     #Changes the colour of the text is the user has put an invalid input
     if number_of_items == "" or 0 > int(number_of_items) or 500 <= int(number_of_items):
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
-    #Keeps the text black is there is a correct input
+    #Keeps the text the same colour is there is a correct input
     else:
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
 
     #Prints the details if the input is valid
     if customer_name and item_name and 0 < int(number_of_items) <= 500:
-        Label(main_window, font=("Times New Roman", 14), text = customer_name, bg = "light blue", fg = "#084772", width = 20).grid(column = 1, row = current_row)
-        Label(main_window, font=("Times New Roman", 14), text = item_name, bg = "light blue", fg = "#084772", width = 20).grid(column = 2, row = current_row)
-        Label(main_window, font=("Times New Roman", 14), text = number_of_items, bg = "light blue", fg = "#084772", width = 20).grid(column = 3, row = current_row)
-        Label(main_window, font=("Times New Roman", 14), text = current_row-5, bg = "light blue", fg = "#084772", width = 20).grid(column = 4, row = current_row)
+        Label(main_window, font=("Times New Roman", 14), text = reciept_number, bg = "light blue", fg = "#084772", width = 10).grid(column = 0, row = current_row)
+        Label(main_window, font=("Times New Roman", 14), text = customer_name, bg = "light blue", fg = "#084772", width = 10).grid(column = 1, row = current_row)
+        Label(main_window, font=("Times New Roman", 14), text = item_name, bg = "light blue", fg = "#084772", width = 10).grid(column = 2, row = current_row)
+        Label(main_window, font=("Times New Roman", 14), text = number_of_items, bg = "light blue", fg = "#084772", width = 10).grid(column = 3, row = current_row)
+        Label(main_window, font=("Times New Roman", 14), text = current_row - 4, bg = "light blue", fg = "#084772", width = 10).grid(column = 4, row = current_row)
         #Increases the variable current row by 1
         current_row += 1
     
@@ -76,7 +88,7 @@ def buttons():
 
 #Creates a fucntion for the entries
 def entries():
-    #Creates these four global variables
+    #Creates these global variables
     global entry_customer_name, entry_item_name, entry_number_of_items
 
     #Creates the input box for customer name
@@ -100,7 +112,7 @@ def main():
     main_window.title("Party Hire Store")
     main_window.configure(bg = "light blue")
     global current_row
-    current_row = 6
+    current_row = 5
     labels()
     buttons()
     entries()
@@ -109,3 +121,4 @@ def main():
 main_window = Tk()
 main()
 main_window.mainloop()
+    
