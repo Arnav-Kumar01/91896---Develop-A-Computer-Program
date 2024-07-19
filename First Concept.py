@@ -17,6 +17,7 @@ def generate_receipt():
 #Creates a quit function which can be used for the quit button
 def quit():
     main_window.destroy()
+    error_message_window.destroy()
 
 #Creates a submit function which can be used for the quit button
 def submit():
@@ -28,31 +29,50 @@ def submit():
 
     #Runs the random number generator
     generate_receipt()
+
+    #Clear previous error messages
+    for error_messages in error_message_window.winfo_children():
+        error_messages.destroy()
+
+    #Sets the error to false so that if an error occurs it changes to true
+    error_occurred = False
     
-    #Changes the colour of the text is the user has put an invalid input
+    #Changes the colour of the text to red and prints an error message on a seperate window if an error has occurred
     if customer_name == "":
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Customer Full Name:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 0, sticky = E)
-    #Keeps the text black is there is a correct input
+        error_message_window.deiconify()
+        Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter your full name, you cannot leave it blank.", bg = "light blue", fg = "red").grid(column = 0, row = 0, padx = 10, pady = 5)
+        error_occurred = True
+    #Keeps the text the same colour if there is no error
     else:
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Customer Full Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 0, sticky = E)
 
-    #Changes the colour of the text is the user has put an invalid input
+    #Changes the colour of the text to red and prints an error message on a seperate window if an error has occu
     if item_name == "":
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
-    #Keeps the text black is there is a correct input
+        error_message_window.deiconify()
+        Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter your item, you cannot leave it blank.", bg = "light blue", fg = "red").grid(column = 0, row = 1, padx = 10, pady = 5)
+        error_occurred = True
+    #Keeps the text the same colour if there is no error
     else:
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
 
-    #Changes the colour of the text is the user has put an invalid input
-    if number_of_items == "" or 0 > int(number_of_items) or 500 <= int(number_of_items):
+    #Changes the colour of the text to red and prints an error message on a seperate window if an error has occu
+    if number_of_items == "" or int(number_of_items) <= 0 or int(number_of_items) > 500:
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
-    #Keeps the text the same colour is there is a correct input
+        error_message_window.deiconify()
+        Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter the number of items, must be a number between 1 and 500.", bg = "light blue", fg = "red").grid(column = 0, row = 2, padx = 10, pady = 5)
+        error_occurred = True
+    #Keeps the text the same colour if there is no error
     else:
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
 
-    #Prints the details if the input is valid
-    if customer_name and item_name and 0 < int(number_of_items) <= 500:
+    #Prints the details if no error has occurred
+    if error_occurred == False:
 
+        #Hide the error messages window
+        error_message_window.withdraw()
+        
         #Prints the receipt number
         receipt_label = Label(main_window, font = ("Times New Roman", 14), text = receipt_number, bg = "light blue", fg = "#084772", width = 10)
         receipt_label.grid(column = 0, row = current_row)
@@ -99,7 +119,7 @@ def labels():
     Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
     Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
 
-    #Blank row for aesthetics
+    #Blank row for aesthetics with a horizontal line
     Label(main_window, bg = "light blue", text = "_"*75).grid(column = 0, row = 3, columnspan = 4)
 
     #Labels for the headers for the printed details
@@ -126,7 +146,7 @@ def entries():
     entry_customer_name.grid(column = 1, row = 0)
 
     #Creates a combobox to have a multichoice list for item name
-    entry_item_name = Combobox(main_window, values=["", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5"], width = 13)
+    entry_item_name = Combobox(main_window, values = ["", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5"], width = 13)
     entry_item_name.grid(column = 1, row = 1)
     entry_item_name.current(0)
 
@@ -140,16 +160,29 @@ def entries():
 
 #Creates the main function
 def main():
+    #Gives the main window a title
     main_window.title("Party Hire Store")
+    #Makes the main window light blue
     main_window.configure(bg = "light blue")
+    #Gives the error messages window a title
+    error_message_window.title("Error Messages")
+    #Makes the error messages window light blue
+    error_message_window.configure(bg = "light blue")
+    #Hides the error messages window
+    error_message_window.withdraw()
+    #Creates these global variables
     global current_row, rows
+    #Sets current row to be 5
     current_row = 5
     rows = []
+    #Starts all these functions
     labels()
     buttons()
     entries()
 
 #Other necessary lines of code for the program to run
 main_window = Tk()
+error_message_window = Tk()
+#Starts the main function
 main()
 main_window.mainloop()
