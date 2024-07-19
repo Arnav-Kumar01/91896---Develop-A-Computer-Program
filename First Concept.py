@@ -6,6 +6,7 @@
 from tkinter import*
 from tkinter.ttk import Combobox
 import random
+import re
 
 #Creates a function for the receipt number
 def generate_receipt():
@@ -38,35 +39,46 @@ def submit():
     error_occurred = False
     
     #Changes the colour of the text to red and prints an error message on a seperate window if an error has occurred
-    if customer_name == "":
+    if customer_name == "" or not re.match("^[A-Za-z- ]+$", customer_name):
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Customer Full Name:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 0, sticky = E)
         error_message_window.deiconify()
-        Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter your full name, you cannot leave it blank.", bg = "light blue", fg = "red").grid(column = 0, row = 0, padx = 10, pady = 5)
+        Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter your full name with letters only, you cannot leave it blank.", bg = "pink", fg = "red").grid(column = 0, row = 0, padx = 10, pady = 5)
+        Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = clear_items, fg = "red", width = 10).grid(column = 0, row = 3, pady = 5)
         error_occurred = True
     #Keeps the text the same colour if there is no error
     else:
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Customer Full Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 0, sticky = E)
 
-    #Changes the colour of the text to red and prints an error message on a seperate window if an error has occu
+    #Changes the colour of the text to red and prints an error message on a seperate window if an error has occurred
     if item_name == "":
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
         error_message_window.deiconify()
-        Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter your item, you cannot leave it blank.", bg = "light blue", fg = "red").grid(column = 0, row = 1, padx = 10, pady = 5)
+        Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter your item, you cannot leave it blank.", bg = "pink", fg = "red").grid(column = 0, row = 1, padx = 10, pady = 5)
+        Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = clear_items, fg = "red", width = 10).grid(column = 0, row = 3, pady = 5)
         error_occurred = True
     #Keeps the text the same colour if there is no error
     else:
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
 
-    #Changes the colour of the text to red and prints an error message on a seperate window if an error has occu
-    if number_of_items == "" or int(number_of_items) <= 0 or int(number_of_items) > 500:
+    #Changes the colour of the text to red and prints an error message on a seperate window if an error has occurred
+    try:
+        if number_of_items == "" or int(number_of_items) <= 0 or int(number_of_items) > 500:
+            Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
+            error_message_window.deiconify()
+            Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter the number of items, must be a number between 1 and 500.", bg = "pink", fg = "red").grid(column = 0, row = 2, padx = 10, pady = 5)
+            Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = clear_items, fg = "red", width = 10).grid(column = 0, row = 3, pady = 5)
+            error_occurred = True
+        #Keeps the text the same colour if there is no error
+        else:
+            Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
+    #Prints an error message on a seperate window if theres a value error such as a word being written
+    except ValueError:
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
         error_message_window.deiconify()
-        Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter the number of items, must be a number between 1 and 500.", bg = "light blue", fg = "red").grid(column = 0, row = 2, padx = 10, pady = 5)
+        Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter the number of items, must be a number between 1 and 500.", bg = "pink", fg = "red").grid(column = 0, row = 2, padx = 10, pady = 5)
+        Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = clear_items, fg = "red", width = 10).grid(column = 0, row = 3, pady = 5)
         error_occurred = True
-    #Keeps the text the same colour if there is no error
-    else:
-        Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
-
+        
     #Prints the details if no error has occurred
     if error_occurred == False:
 
@@ -74,19 +86,19 @@ def submit():
         error_message_window.withdraw()
         
         #Prints the receipt number
-        receipt_label = Label(main_window, font = ("Times New Roman", 14), text = receipt_number, bg = "light blue", fg = "#084772", width = 10)
+        receipt_label = Label(main_window, font = ("Times New Roman", 14), text = receipt_number, bg = "light blue", fg = "#084772", width = 20)
         receipt_label.grid(column = 0, row = current_row)
 
         #Prints the customer's name
-        customer_label = Label(main_window, font = ("Times New Roman", 14), text = customer_name, bg = "light blue", fg = "#084772", width = 10)
+        customer_label = Label(main_window, font = ("Times New Roman", 14), text = customer_name, bg = "light blue", fg = "#084772", width = 20)
         customer_label.grid(column = 1, row = current_row)
 
         #Prints the item name
-        item_label = Label(main_window, font = ("Times New Roman", 14), text = item_name, bg = "light blue", fg = "#084772", width = 10)
+        item_label = Label(main_window, font = ("Times New Roman", 14), text = item_name, bg = "light blue", fg = "#084772", width = 20)
         item_label.grid(column = 2, row = current_row)
 
         #Prints number of items
-        number_label = Label(main_window, font = ("Times New Roman", 14), text = number_of_items, bg = "light blue", fg = "#084772", width = 10)
+        number_label = Label(main_window, font = ("Times New Roman", 14), text = number_of_items, bg = "light blue", fg = "#084772", width = 20)
         number_label.grid(column = 3, row = current_row)
 
         #Appends all the labels to the rows variable so that it can be deleted by the user
@@ -97,10 +109,19 @@ def submit():
 
 #Creates a function to clear the items
 def clear_items():
+    #Resets all the entries including the combobox
     entry_customer_name.delete(0, END)
     entry_item_name.current(0)
     entry_number_of_items.delete(0, END)
 
+    #Resets the labels to it's original colour if the colour has been changed beforehand
+    Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Customer Full Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 0, sticky = E)
+    Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
+    Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
+
+    #Hides the error message screen if the error message screen is open
+    error_message_window.withdraw()
+    
 #Creates a function to delete a specific row
 def delete_row():
     #Finds the row to delete by adding 4 to the user's input as thats how many non changable rows there are
@@ -120,7 +141,10 @@ def labels():
     Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
 
     #Blank row for aesthetics with a horizontal line
-    Label(main_window, bg = "light blue", text = "_"*75).grid(column = 0, row = 3, columnspan = 4)
+    Label(main_window, bg = "light blue", fg = "#084772", text = "_"*75).grid(column = 0, row = 3, columnspan = 4)
+
+    #Label for the delete row entry
+    Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Delete Row:", bg = "light blue", fg = "#084772", width = 20).grid(column = 3, row = 1)
 
     #Labels for the headers for the printed details
     Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Receipt Number:", bg = "light blue", fg = "#084772", width = 20).grid(column = 0, row = 4)
@@ -167,7 +191,7 @@ def main():
     #Gives the error messages window a title
     error_message_window.title("Error Messages")
     #Makes the error messages window light blue
-    error_message_window.configure(bg = "light blue")
+    error_message_window.configure(bg = "pink")
     #Hides the error messages window
     error_message_window.withdraw()
     #Creates these global variables
