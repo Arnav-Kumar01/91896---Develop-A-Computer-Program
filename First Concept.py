@@ -72,20 +72,20 @@ def entries():
     global entry_customer_name, entry_item_name, entry_number_of_items, entry_delete_row
 
     #Creates the input box for customer name
-    entry_customer_name = Entry(main_window, width = 15)
+    entry_customer_name = Entry(main_window, font = ("Times New Roman", 14), width = 20)
     entry_customer_name.grid(column = 1, row = 0, pady = 5)
 
     #Creates a combobox to have a multichoice list for item name
-    entry_item_name = Combobox(main_window, values = ["", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5"], width = 13)
+    entry_item_name = Combobox(main_window, font = ("Times New Roman", 14), values = ["", "Balloons", "Candles", "Chips", "Cake", "Paper Plates", "Paper Cups", "Napkins"], width = 18)
     entry_item_name.grid(column = 1, row = 1, pady = 5)
     entry_item_name.current(0)
 
     #Creates the input box for the number of items
-    entry_number_of_items = Entry(main_window, width = 15)
+    entry_number_of_items = Entry(main_window, font = ("Times New Roman", 14), width = 20)
     entry_number_of_items.grid(column = 1, row = 2, pady = 5)
 
     #Creates the input box for delete row
-    entry_delete_row = Entry(main_window, width = 10)
+    entry_delete_row = Entry(main_window, font = ("Times New Roman", 14), width = 13)
     entry_delete_row.grid(column = 3, row = 1, pady = 5)
 
 #Creates a function to clear the items
@@ -138,7 +138,7 @@ def submit():
 
 
     #Sets the allowed items for item name to these
-    allowed_items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
+    allowed_items = ["Balloons", "Candles", "Chips", "Cake", "Paper Plates", "Paper Cups", "Napkins"]
     
     #Changes the colour of the text to red and prints an error message on a seperate window if an error has occurred
     if item_name not in allowed_items:
@@ -238,7 +238,6 @@ def main():
     quit_screen.title("Quit Window")
     quit_screen.configure(bg = "pink")
     quit_screen.withdraw()
-
     
     #Creates global variables to be used in other functions
     global current_row, rows
@@ -261,4 +260,6 @@ quit_screen = Tk()
 
 #Starts the main function
 main()
+
+#Keeps the main window open
 main_window.mainloop()
