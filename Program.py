@@ -17,6 +17,7 @@ def quit():
     main_window.destroy()
     error_message_window.destroy()
     quit_screen.destroy()
+    delete_row_window.destroy()
 
 #Hides the quit screen if the user doesn't confirm the quit
 def cancel_quit():
@@ -27,15 +28,17 @@ def ok_button():
     #Hides the error message screen
     error_message_window.withdraw()
 
-    #Resets the labels to it's original colour if the colour has been changed beforehand
-    Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Customer Full Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 0, sticky = E)
-    Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
-    Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
+    #Resets the border colours to light blue
+    entry_customer_name.configure(highlightbackground = "light blue")
+    entry_number_of_items.configure(highlightbackground = "light blue")
 
 #Hides the delete row screen if the user presses ok
 def delete_row_ok():
     #Hides the delete row screen
     delete_row_window.withdraw()
+
+    #Resets the delete row border to light blue
+    reset_delete_row()
 
 #Creates a function which holds all the labels for the main window
 def labels():
@@ -135,51 +138,51 @@ def submit():
     error_occurred = False
 
     
-    #Changes the colour of the text to red and prints an error message on a seperate window if an error has occurred
+    #Changes the colour of the border to red and prints an error message on a seperate window if an error has occurred
     if customer_name == "" or not re.match("^[A-Za-z- ]+$", customer_name):
-        Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Customer Full Name:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 0, sticky = E)
+        entry_customer_name.configure(highlightbackground = "red")
         error_message_window.deiconify()
         Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter your full name with letters only, you cannot leave it blank.", bg = "pink", fg = "red").grid(column = 0, row = 0, padx = 10, pady = 5)
         Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, bg = "red", fg = "pink", width = 10).grid(column = 0, row = 3, pady = 5)
         error_occurred = True
         
-    #Keeps the text the same colour if there is no error
+    #Keeps the border the same colour if there is no error
     else:
-        Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Customer Full Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 0, sticky = E)
+        entry_customer_name.configure(highlightbackground = "light blue")
 
 
     #Sets the allowed items for item name to these
     allowed_items = ["Balloons", "Candles", "Paper Plates", "Paper Cups", "Napkins", "Streamers", "Confetti", "Party Hats", "Glitter"]
-    
-    #Changes the colour of the text to red and prints an error message on a seperate window if an error has occurred
+ 
+    #Changes the colour of the combobox to red and prints an error message on a seperate window if an error has occurred
     if item_name not in allowed_items:
-        Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
+        entry_item_name.configure(background = "red")
         error_message_window.deiconify()
         Label(error_message_window, font = ("Times New Roman", 14), text = "Please choose an item from the list, you cannot leave it blank.", bg = "pink", fg = "red").grid(column = 0, row = 1, padx = 10, pady = 5)
         Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, bg = "red", fg = "pink", width = 10).grid(column = 0, row = 3, pady = 5)
         error_occurred = True
         
-    #Keeps the text the same colour if there is no error
+    #Keeps the combobox the same colour if there is no error
     else:
-        Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
+        entry_item_name.configure(background = "white")
 
 
-    #Changes the colour of the text to red and prints an error message on a seperate window if an error has occurred
+    #Changes the colour of the border to red and prints an error message on a seperate window if an error has occurred
     try:
         if number_of_items == "" or int(number_of_items) <= 0 or int(number_of_items) > 500:
-            Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
+            entry_number_of_items.configure(highlightbackground = "red")
             error_message_window.deiconify()
             Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter the number of items, must be a number between 1 and 500.", bg = "pink", fg = "red").grid(column = 0, row = 2, padx = 10, pady = 5)
             Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, bg = "red", fg = "pink", width = 10).grid(column = 0, row = 3, pady = 5)
             error_occurred = True
             
-        #Keeps the text the same colour if there is no error
+        #Keeps the border the same colour if there is no error
         else:
-            Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
+            entry_number_of_items.configure(highlightbackground = "light blue")
 
     #Prints an error message on a seperate window if theres a value error such as a word being written
     except ValueError:
-        Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
+        entry_number_of_items.configure(highlightbackground = "red")
         error_message_window.deiconify()
         Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter the number of items, must be a number between 1 and 500.", bg = "pink", fg = "red").grid(column = 0, row = 2, padx = 10, pady = 5)
         Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, bg = "red", fg = "pink", width = 10).grid(column = 0, row = 3, pady = 5)
@@ -218,29 +221,52 @@ def submit():
         #Increases the variable current row by 1
         current_row += 1
 
+#Gives the delete row entry a red border
+def red_delete_row():
+    entry_delete_row.configure(highlightbackground = "red")
+
+#Resets the delete row entry border to light blue
+def reset_delete_row():
+    entry_delete_row.configure(highlightbackground = "light blue")
+
 #Creates a function to delete a specific row
 def delete_row():
     try:
         #Checks that the entry is a number
         row_to_delete = int(entry_delete_row.get())
+
+        #Checks that the entry is above 0
+        if row_to_delete <= 0:
+            raise ValueError("Row number must be greater than zero.")
         
         #Adds 4 to exclude the non removable rows
         row_to_delete += 4
 
         #Ensures that the row exists
         if row_to_delete < current_row:
-            for widget in rows[row_to_delete - 5]:
+            for widget in rows[row_to_delete - 6]:
                 widget.destroy()
 
             #Deletes the row
-            del rows[row_to_delete - 5]
+            del rows[row_to_delete - 6]
 
+            #Changes the border back to light blue
+            reset_delete_row()
+
+            #Hides the delete row window
+            delete_row_window.withdraw()
+            
         #Prints an error message if it is not a number that exists
         else:
+            #Changes the border to red
+            red_delete_row()
+
+            #Makes the delete row window appear
             delete_row_window.deiconify()
             
     #Prints an error message if there is an error
     except ValueError:
+        red_delete_row()
         delete_row_window.deiconify()
 
     #Clears the entry box
@@ -270,8 +296,8 @@ def main():
     #Creates global variables to be used in other functions
     global current_row, rows
     
-    #Sets current row to be 5
-    current_row = 5
+    #Sets current row to be 6
+    current_row = 6
     
     #Creates a list of the rows variable
     rows = []
