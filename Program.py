@@ -32,6 +32,11 @@ def ok_button():
     Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
     Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
 
+#Hides the delete row screen if the user presses ok
+def delete_row_ok():
+    #Hides the delete row screen
+    delete_row_window.withdraw()
+
 #Creates a function which holds all the labels for the main window
 def labels():
     #Labels for the text for the inputs
@@ -40,7 +45,10 @@ def labels():
     Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E, pady = 5)
 
     #Label for the delete row entry
-    Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Delete Row:", bg = "light blue", fg = "#084772", width = 20).grid(column = 3, row = 0, pady = 5)
+    Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Row:", bg = "light blue", fg = "#084772", width = 20).grid(column = 3, row = 0, pady = 5)
+
+    #Blank row for aesthetics with a horizontal line
+    Label(main_window, bg = "light blue", fg = "#084772", text = "_–"*75).grid(column = 0, row = 3, columnspan = 4)
 
     #Labels for the headers for the printed details
     Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Receipt Number:", bg = "light blue", fg = "#084772", width = 20).grid(column = 0, row = 4)
@@ -48,23 +56,26 @@ def labels():
     Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "#084772", width = 20).grid(column = 2, row = 4)
     Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "#084772", width = 20).grid(column = 3, row = 4)
 
-    #Blank row for aesthetics with a horizontal line
-    Label(main_window, bg = "light blue", fg = "#084772", text = "_"*75).grid(column = 0, row = 3, columnspan = 4)
-
     #Asks the user if they are sure they want to quit the program, this label is on the quit screen
-    Label(quit_screen, font = ("Times New Roman", 14), text = "Are you sure you want to quit?", bg = "pink", fg = "red").grid(column = 0, row = 0, columnspan = 2, padx = 10, pady = 5)
+    Label(quit_screen, font = ("Times New Roman", 14), text = "Are you sure you want to quit?", bg = "light blue", fg = "#084772").grid(column = 0, row = 0, columnspan = 2, padx = 10, pady = 5)
+
+    #Error message if the user types a wrong input into delete row
+    Label(delete_row_window, font = ("Times New Roman", 14), text = "Please enter a valid row number that exists.", bg = "pink", fg = "red").grid(column = 0, row = 0, padx = 10, pady = 5)
 
 #Creates a function for the buttons
 def buttons():
     #Buttons for quit, sumbit, delete row, and clear items
-    Button(main_window, font = ("Times New Roman", 14, "bold"), text = "Quit", command = quit_window, fg = "#084772", width = 10).grid(column = 2, row = 0, pady = 5)
-    Button(main_window, font = ("Times New Roman", 14, "bold"), text = "Submit", command = submit, fg = "#084772", width = 10).grid(column = 2, row = 2, pady = 5)
-    Button(main_window, font = ("Times New Roman", 14, "bold"), text = "Delete Row", command = delete_row, fg = "#084772", width = 10).grid(column = 3, row = 2, pady = 5)
-    Button(main_window, font = ("Times New Roman", 14, "bold"), text = "Clear Items", command = clear_items, fg = "#084772", width = 10).grid(column = 2, row = 1, pady = 5)
-
+    Button(main_window, font = ("Times New Roman", 14, "bold"), text = "Quit", command = quit_window, bg = "#084772", fg = "light blue", width = 10).grid(column = 2, row = 0, pady = 5)
+    Button(main_window, font = ("Times New Roman", 14, "bold"), text = "Clear Items", command = clear_items, bg = "#084772", fg = "light blue", width = 10).grid(column = 2, row = 1, pady = 5)
+    Button(main_window, font = ("Times New Roman", 14, "bold"), text = "Submit", command = submit, bg = "#084772", fg = "light blue", width = 10).grid(column = 2, row = 2, pady = 5)
+    Button(main_window, font = ("Times New Roman", 14, "bold"), text = "Delete Row", command = delete_row, bg = "#084772", fg = "light blue", width = 10).grid(column = 3, row = 2, pady = 5)
+    
     #Buttons for yes and no for the quit screen
-    Button(quit_screen, font = ("Times New Roman", 14, "bold"), text = "Yes", command = quit, fg = "red", width = 10).grid(column = 0, row = 1, padx = 10, pady = 5)
-    Button(quit_screen, font = ("Times New Roman", 14, "bold"), text = "No", command = cancel_quit, fg = "red", width = 10).grid(column = 1, row = 1, padx = 10, pady = 5)
+    Button(quit_screen, font = ("Times New Roman", 14, "bold"), text = "Yes", command = quit, bg = "#084772", fg = "light blue", width = 10).grid(column = 0, row = 1, padx = 10, pady = 5)
+    Button(quit_screen, font = ("Times New Roman", 14, "bold"), text = "No", command = cancel_quit, bg = "#084772", fg = "light blue", width = 10).grid(column = 1, row = 1, padx = 10, pady = 5)
+
+    #Ok button for delete row
+    Button(delete_row_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = delete_row_ok, bg = "red", fg = "pink", width = 10).grid(column = 0, row = 1, pady = 5)
 
 #Creates a function for the entries
 def entries():
@@ -72,16 +83,16 @@ def entries():
     global entry_customer_name, entry_item_name, entry_number_of_items, entry_delete_row
 
     #Creates the input box for customer name
-    entry_customer_name = Entry(main_window, font = ("Times New Roman", 14), width = 20)
+    entry_customer_name = Entry(main_window, font = ("Times New Roman", 14), width = 16)
     entry_customer_name.grid(column = 1, row = 0, pady = 5)
 
     #Creates a combobox to have a multichoice list for item name
-    entry_item_name = Combobox(main_window, font = ("Times New Roman", 14), values = ["", "Balloons", "Candles", "Chips", "Cake", "Paper Plates", "Paper Cups", "Napkins"], width = 18)
+    entry_item_name = Combobox(main_window, font = ("Times New Roman", 14), values = ["", "Balloons", "Candles", "Paper Plates", "Paper Cups", "Napkins", "Streamers", "Confetti", "Party Hats", "Glitter"], width = 14)
     entry_item_name.grid(column = 1, row = 1, pady = 5)
     entry_item_name.current(0)
 
     #Creates the input box for the number of items
-    entry_number_of_items = Entry(main_window, font = ("Times New Roman", 14), width = 20)
+    entry_number_of_items = Entry(main_window, font = ("Times New Roman", 14), width = 16)
     entry_number_of_items.grid(column = 1, row = 2, pady = 5)
 
     #Creates the input box for delete row
@@ -101,7 +112,7 @@ def generate_receipt():
     global receipt_number
 
     #Random number generator
-    receipt_number = random.randint(100000, 999999)
+    receipt_number = random.randint(1000000000, 9999999999)
 
 #Creates a submit function which can be used for the submit button
 def submit():
@@ -129,7 +140,7 @@ def submit():
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Customer Full Name:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 0, sticky = E)
         error_message_window.deiconify()
         Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter your full name with letters only, you cannot leave it blank.", bg = "pink", fg = "red").grid(column = 0, row = 0, padx = 10, pady = 5)
-        Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, fg = "red", width = 10).grid(column = 0, row = 3, pady = 5)
+        Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, bg = "red", fg = "pink", width = 10).grid(column = 0, row = 3, pady = 5)
         error_occurred = True
         
     #Keeps the text the same colour if there is no error
@@ -138,14 +149,14 @@ def submit():
 
 
     #Sets the allowed items for item name to these
-    allowed_items = ["Balloons", "Candles", "Chips", "Cake", "Paper Plates", "Paper Cups", "Napkins"]
+    allowed_items = ["Balloons", "Candles", "Paper Plates", "Paper Cups", "Napkins", "Streamers", "Confetti", "Party Hats", "Glitter"]
     
     #Changes the colour of the text to red and prints an error message on a seperate window if an error has occurred
     if item_name not in allowed_items:
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Item Name:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 1, sticky = E)
         error_message_window.deiconify()
         Label(error_message_window, font = ("Times New Roman", 14), text = "Please choose an item from the list, you cannot leave it blank.", bg = "pink", fg = "red").grid(column = 0, row = 1, padx = 10, pady = 5)
-        Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, fg = "red", width = 10).grid(column = 0, row = 3, pady = 5)
+        Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, bg = "red", fg = "pink", width = 10).grid(column = 0, row = 3, pady = 5)
         error_occurred = True
         
     #Keeps the text the same colour if there is no error
@@ -159,7 +170,7 @@ def submit():
             Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
             error_message_window.deiconify()
             Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter the number of items, must be a number between 1 and 500.", bg = "pink", fg = "red").grid(column = 0, row = 2, padx = 10, pady = 5)
-            Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, fg = "red", width = 10).grid(column = 0, row = 3, pady = 5)
+            Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, bg = "red", fg = "pink", width = 10).grid(column = 0, row = 3, pady = 5)
             error_occurred = True
             
         #Keeps the text the same colour if there is no error
@@ -171,7 +182,7 @@ def submit():
         Label(main_window, font = ("Times New Roman", 14, "bold"), text = "Number Of Items:", bg = "light blue", fg = "red", width = 20, anchor = "e").grid(column = 0, row = 2, sticky = E)
         error_message_window.deiconify()
         Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter the number of items, must be a number between 1 and 500.", bg = "pink", fg = "red").grid(column = 0, row = 2, padx = 10, pady = 5)
-        Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, fg = "red", width = 10).grid(column = 0, row = 3, pady = 5)
+        Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, bg = "red", fg = "pink", width = 10).grid(column = 0, row = 3, pady = 5)
         error_occurred = True
 
  
@@ -209,19 +220,31 @@ def submit():
 
 #Creates a function to delete a specific row
 def delete_row():
-    #Finds the row to delete by adding 4 to the user's input as thats how many non changable rows there are
-    row_to_delete = int(entry_delete_row.get()) + 4
-    
-    #Ensures that the row to delete actually exists
-    if row_to_delete < current_row:
-        for widget in rows[row_to_delete - 5]:
-            widget.destroy()
-            
-        #Deletes the row
-        del rows[row_to_delete - 5]
+    try:
+        #Checks that the entry is a number
+        row_to_delete = int(entry_delete_row.get())
         
-        #Clears the entry box
-        entry_delete_row.delete(0, END)
+        #Adds 4 to exclude the non removable rows
+        row_to_delete += 4
+
+        #Ensures that the row exists
+        if row_to_delete < current_row:
+            for widget in rows[row_to_delete - 5]:
+                widget.destroy()
+
+            #Deletes the row
+            del rows[row_to_delete - 5]
+
+        #Prints an error message if it is not a number that exists
+        else:
+            delete_row_window.deiconify()
+            
+    #Prints an error message if there is an error
+    except ValueError:
+        delete_row_window.deiconify()
+
+    #Clears the entry box
+    entry_delete_row.delete(0, END)
 
 #Creates the main function
 def main():
@@ -236,8 +259,13 @@ def main():
 
     #Gives the quit window a title, colour and hides it to begin with
     quit_screen.title("Quit Window")
-    quit_screen.configure(bg = "pink")
+    quit_screen.configure(bg = "light blue")
     quit_screen.withdraw()
+
+    #Gives the delete row window a title, colour and hides it to begin with
+    delete_row_window.title("Delete Row")
+    delete_row_window.configure(bg = "pink")
+    delete_row_window.withdraw()
     
     #Creates global variables to be used in other functions
     global current_row, rows
@@ -257,6 +285,7 @@ def main():
 main_window = Tk()
 error_message_window = Tk()
 quit_screen = Tk()
+delete_row_window = Tk()
 
 #Starts the main function
 main()
