@@ -107,8 +107,12 @@ def generate_receipt():
     # Creates a global variable to be used in another function.
     global receipt_number
 
-    # Random number generator.
-    receipt_number = random.randint(1000000000, 9999999999)
+    # Random number generator but it ensures that the same receipt number can't be printed twice.
+    while True:
+        receipt_number = random.randint(1000000000, 9999999999)
+        if receipt_number not in generated_receipt_numbers:
+            generated_receipt_numbers.add(receipt_number)
+            break
 
 # Creates a submit function which can be used for the submit button.
 def submit():
@@ -206,7 +210,7 @@ def delete_row():
         row_to_delete = int(entry_delete_row.get()) - 1
 
         # Ensures that the row exists.
-        if 0 <= row_to_delete < current_row - 6:
+        if 0 <= row_to_delete < len(rows):
             for widget in rows[row_to_delete]:
                 widget.destroy()
 
@@ -250,10 +254,13 @@ def main():
     delete_row_window.withdraw()
     
     # Creates global variables to be used in other functions.
-    global current_row, rows
+    global current_row, rows, generated_receipt_numbers
     
     # Sets current row to be 6.
     current_row = 6
+
+    # Set up to store receipt numbers so it is not repeated.
+    generated_receipt_numbers = set()
     
     # Creates a list of the rows variable.
     rows = []
