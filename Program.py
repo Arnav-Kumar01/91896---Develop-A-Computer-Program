@@ -7,6 +7,8 @@ from tkinter import*
 from tkinter.ttk import Combobox
 import random
 import re
+import csv
+import os
 
 # Shows the quit screen.
 def quit_window():
@@ -114,6 +116,31 @@ def generate_receipt():
             generated_receipt_numbers.add(receipt_number)
             break
 
+# Saves a row to a seperate data file.
+def save_entries(row):
+    with open("receipts.csv", mode = "a", newline = "") as file:
+        writer = csv.writer(file)
+        writer.writerow(row)
+
+# Loads entries from the CSV file at startup.
+def load_entries():
+    global current_row, rows
+    if os.path.exists("receipts.csv"):
+        # Opens the data file in reader mode.
+        with open("receipts.csv", mode = "r") as file:
+            reader = csv.reader(file)
+            for row in reader:
+                rows.append(row)
+
+                # Prints all the previous entries.
+                Label(main_window, font = ("Times New Roman", 14), text = row[0], bg = "light blue", fg = "#084772", width = 20).grid(column = 0, row = current_row)
+                Label(main_window, font = ("Times New Roman", 14), text = row[1], bg = "light blue", fg = "#084772", width = 20).grid(column = 1, row = current_row)
+                Label(main_window, font = ("Times New Roman", 14), text = row[2], bg = "light blue", fg = "#084772", width = 20).grid(column = 2, row = current_row)
+                Label(main_window, font = ("Times New Roman", 14), text = row[3], bg = "light blue", fg = "#084772", width = 20).grid(column = 3, row = current_row)
+
+                # Increases current row by 1.
+                current_row += 1
+
 # Creates a submit function which can be used for the submit button.
 def submit():
     # Creates global variables to be used in other functions.
@@ -172,65 +199,68 @@ def submit():
 
  
     # Prints the details if no error has occurred.
-    if error_occurred == False:
-        # Hide the error messages window.
-        error_message_window.withdraw()
+    if not error_occurred:
+        # Defines what "row" is.
+        row = [receipt_number, customer_name, item_name, number_of_items]
+        rows.append(row)
 
-        # Resets all the entries including the combobox.
-        entry_customer_name.delete(0, END)
-        entry_item_name.current(0)
-        entry_number_of_items.delete(0, END)
-        
-        # Prints the receipt number.
-        receipt_label = Label(main_window, font = ("Times New Roman", 14), text = receipt_number, bg = "light blue", fg = "#084772", width = 20)
-        receipt_label.grid(column = 0, row = current_row)
+        # Saves the inputs into the data file.
+        save_entries(row)
 
-        # Prints the customer's name.
-        customer_label = Label(main_window, font = ("Times New Roman", 14), text = customer_name, bg = "light blue", fg = "#084772", width = 20)
-        customer_label.grid(column = 1, row = current_row)
+        # Prints all the inputs.
+        Label(main_window, font = ("Times New Roman", 14), text = receipt_number, bg = "light blue", fg = "#084772", width = 20).grid(column = 0, row = current_row)
+        Label(main_window, font = ("Times New Roman", 14), text = customer_name, bg = "light blue", fg = "#084772", width = 20).grid(column = 1, row = current_row)
+        Label(main_window, font = ("Times New Roman", 14), text = item_name, bg = "light blue", fg = "#084772", width = 20).grid(column = 2, row = current_row)
+        Label(main_window, font = ("Times New Roman", 14), text = number_of_items, bg = "light blue", fg = "#084772", width = 20).grid(column = 3, row = current_row)
 
-        # Prints the item name.
-        item_label = Label(main_window, font = ("Times New Roman", 14), text = item_name, bg = "light blue", fg = "#084772", width = 20)
-        item_label.grid(column = 2, row = current_row)
-
-        # Prints number of items.
-        number_label = Label(main_window, font = ("Times New Roman", 14), text = number_of_items, bg = "light blue", fg = "#084772", width = 20)
-        number_label.grid(column = 3, row = current_row)
-
-        # Appends all the labels to the rows variable so that it can be deleted by the user.
-        rows.append((receipt_label, customer_label, item_label, number_label))
-
-        # Increases the variable current row by 1.
+        # Increases current row by 1.
         current_row += 1
 
+        # Clears all the entry boxes.
+        clear_items()
+        
 # Creates a function to delete a specific row.
 def delete_row():
+    # Creates global variables to be used in other functions.
+    global current_row, rows
     try:
-        # Checks that the entry is a number.
         row_to_delete = int(entry_delete_row.get()) - 1
-
-        # Ensures that the row exists.
+        
+        # Ensures the row number exists, and removes the row from the list.
         if 0 <= row_to_delete < len(rows):
-            for widget in rows[row_to_delete]:
-                widget.destroy()
-
-            # Deletes the row.
-            del rows[row_to_delete]
-
-            # Hides the delete row window.
-            delete_row_window.withdraw()
+            rows.pop(row_to_delete)
             
-        # Prints an error message if it is not a number that exists.
+            # Deletes the entry from the GUI.
+            for widget in main_window.grid_slaves():
+                if int(widget.grid_info()["row"]) >= 6:
+                    widget.grid_forget()
+
+            # Reset the current row counter.
+            current_row = 6
+            
+            # Redraw the remaining rows
+            with open("receipts.csv", mode = "w", newline = "") as file:
+                writer = csv.writer(file)
+                for row in rows:
+                    writer.writerow(row)
+                    Label(main_window, font = ("Times New Roman", 14), text = row[0], bg = "light blue", fg = "#084772", width = 20).grid(column = 0, row = current_row)
+                    Label(main_window, font = ("Times New Roman", 14), text = row[1], bg = "light blue", fg = "#084772", width = 20).grid(column = 1, row = current_row)
+                    Label(main_window, font = ("Times New Roman", 14), text = row[2], bg = "light blue", fg = "#084772", width = 20).grid(column = 2, row = current_row)
+                    Label(main_window, font = ("Times New Roman", 14), text = row[3], bg = "light blue", fg = "#084772", width = 20).grid(column = 3, row = current_row)
+
+                    # Increases row number by 1.
+                    current_row += 1
+
+            # Clears the delete row entry.
+            entry_delete_row.delete(0, END)
+
+        # Unhides the delete row error window id there is an error.
         else:
-            # Makes the delete row window appear.
-            raise ValueError
+            delete_row_window.deiconify()
             
-    # Prints an error message if there is an error.
+    # Unhides the delete row error window id there is an error.
     except ValueError:
         delete_row_window.deiconify()
-
-    # Clears the entry box.
-    entry_delete_row.delete(0, END)
 
 # Creates the main function.
 def main():
@@ -269,6 +299,7 @@ def main():
     labels()
     buttons()
     entries()
+    load_entries()
 
 # Other necessary lines of code for the program to run.
 main_window = Tk()
