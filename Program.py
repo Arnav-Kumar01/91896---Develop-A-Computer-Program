@@ -89,12 +89,12 @@ def entries():
     entry_item_name.grid(column = 1, row = 1, pady = 5)
     entry_item_name.current(0)
 
-    # Creates the input box for the number of items.
-    entry_number_of_items = Entry(main_window, font = ("Times New Roman", 14), width = 16)
+    # Creates the spin box for the number of items.
+    entry_number_of_items = Spinbox(main_window, from_ = 1, to = 500, font = ("Times New Roman", 14), width = 14)
     entry_number_of_items.grid(column = 1, row = 2, pady = 5)
 
     # Creates the input box for delete row.
-    entry_delete_row = Entry(main_window, font = ("Times New Roman", 14), width = 13)
+    entry_delete_row = Spinbox(main_window, from_ = 1, to = 50, font = ("Times New Roman", 14), width = 12)
     entry_delete_row.grid(column = 3, row = 1, pady = 5)
 
 # Creates a function to clear the items.
@@ -102,7 +102,7 @@ def clear_items():
     # Resets all the entries including the combobox.
     entry_customer_name.delete(0, END)
     entry_item_name.current(0)
-    entry_number_of_items.delete(0, END)
+    entry_number_of_items.delete(1, END)
 
 # Creates a function for the receipt number.
 def generate_receipt():
@@ -251,11 +251,12 @@ def delete_row():
                     # Increases row number by 1.
                     current_row += 1
 
-            # Clears the delete row entry.
-            entry_delete_row.delete(0, END)
+            # Resets the delete row entry.
+            entry_delete_row.delete(1, END)
 
         # Unhides the delete row error window id there is an error.
         else:
+            entry_delete_row.delete(1, END)
             delete_row_window.deiconify()
             
     # Unhides the delete row error window id there is an error.
