@@ -85,7 +85,7 @@ def entries():
     entry_customer_name.grid(column = 1, row = 0, pady = 5)
 
     # Creates a combobox to have a multichoice list for item name.
-    entry_item_name = Combobox(main_window, font = ("Times New Roman", 14), values = ["", "Balloons", "Candles", "Paper Plates", "Paper Cups", "Napkins", "Streamers", "Confetti", "Party Hats", "Glitter"], width = 14)
+    entry_item_name = Combobox(main_window, state = "readonly", font = ("Times New Roman", 14), values = ["", "Balloons", "Candles", "Paper Plates", "Paper Cups", "Napkins", "Streamers", "Confetti", "Party Hats", "Glitter"], width = 14)
     entry_item_name.grid(column = 1, row = 1, pady = 5)
     entry_item_name.current(0)
 
@@ -102,7 +102,7 @@ def clear_items():
     # Resets all the entries including the combobox.
     entry_customer_name.delete(0, END)
     entry_item_name.current(0)
-    entry_number_of_items.delete(1, END)
+    entry_number_of_items.delete(0, END)
 
 # Creates a function for the receipt number.
 def generate_receipt():
@@ -147,7 +147,7 @@ def submit():
     global current_row, rows
 
     # Assigns a variable to each of the entries so we know what each entry is.
-    customer_name = entry_customer_name.get()
+    customer_name = entry_customer_name.get().title()
     item_name = entry_item_name.get()
     number_of_items = entry_number_of_items.get()
 
@@ -163,7 +163,7 @@ def submit():
 
     
     # Changes the colour of the border to red and prints an error message on a seperate window if an error has occurred.
-    if customer_name == "" or not re.match("^[A-Za-z- ]+$", customer_name):
+    if customer_name == "" or not re.match("^[A-Za-z-' ]+$", customer_name.replace (" ", "")):
         error_message_window.deiconify()
         Label(error_message_window, font = ("Times New Roman", 14), text = "Please enter your full name with letters only, you cannot leave it blank.", bg = "pink", fg = "red").grid(column = 0, row = 0, padx = 10, pady = 5)
         Button(error_message_window, font = ("Times New Roman", 14, "bold"), text = "Ok", command = ok_button, bg = "red", fg = "pink", width = 10).grid(column = 0, row = 3, pady = 5)
@@ -252,11 +252,11 @@ def delete_row():
                     current_row += 1
 
             # Resets the delete row entry.
-            entry_delete_row.delete(1, END)
+            entry_delete_row.delete(0, END)
 
         # Unhides the delete row error window id there is an error.
         else:
-            entry_delete_row.delete(1, END)
+            entry_delete_row.delete(0, END)
             delete_row_window.deiconify()
             
     # Unhides the delete row error window id there is an error.
